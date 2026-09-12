@@ -51,6 +51,18 @@ int main()
     std::unique_ptr<juce::AudioProcessorEditor> ed(proc.createEditor());
     printf("editor=%s floating=%d\n", ed->getBounds().toString().toRawUTF8(),
            (int) ed->isOnDesktop());
+#ifdef SMARTEQ_FREE_VERSION
+    CHECK(ed->getHeight() == 700, "free window 1280x700 (h=%d)", ed->getHeight());
+#else
+    CHECK(ed->getHeight() == 860, "full window 1280x860 (h=%d)", ed->getHeight());
+#endif
+    // Pannello curva presente e visibile con area reale (entrambe le edizioni)
+    bool curveFound = false;
+    for (auto* ch : ed->getChildren())
+        if (ch->isVisible() && ch->getWidth() > 1000 && ch->getHeight() > 100
+            && dynamic_cast<juce::Viewport*>(ch) == nullptr)
+            curveFound = true;
+    CHECK(curveFound, "graphic curve panel present");
     audit(ed.get());
     printf("checked=%d fails=%d\n", checked, fails);
     printf(fails == 0 ? "FREELAYOUT ALL OK\n" : "FREELAYOUT %d FAILURES\n", fails);

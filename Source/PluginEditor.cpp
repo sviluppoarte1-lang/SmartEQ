@@ -90,13 +90,13 @@ SmartEQAudioProcessorEditor::SmartEQAudioProcessorEditor(SmartEQAudioProcessor& 
     : AudioProcessorEditor(p), processor(p)
 {
     // Non chiamare setSize qui - lo facciamo alla fine dopo aver creato tutti i componenti
-    // altrimenti resized() viene chiamato con spectrum==nullptr e crasha (Bitwig discovery)
+    // altrimenti resized() viene chiamato prima che i componenti esistano e crasha (Bitwig discovery)
 
-#ifndef SMARTEQ_FREE_VERSION
-    // Spectrum + intelligent analyzer (Full version only)
+    // Graphic curve in both editions (Free: curve only, no live spectrum).
+    // Paid differences stay: 16 bands + full-song analyze/fix + automation.
     spectrum = std::make_unique<SpectrumComponent>(processor.getSpectrumAnalyzer(), processor.getEQ(), processor.getIntelligentAnalyzer());
-#else
-    spectrum.reset(); // Free: 8 bands, no analyzer
+#ifdef SMARTEQ_FREE_VERSION
+    spectrum->setShowSpectrum(false);
 #endif
     if (spectrum)
     {
@@ -236,7 +236,7 @@ SmartEQAudioProcessorEditor::SmartEQAudioProcessorEditor(SmartEQAudioProcessor& 
     strengthSlider.setColour(juce::Slider::thumbColourId, juce::Colour(0xff00ff88));
 
 #ifdef SMARTEQ_FREE_VERSION
-    statusLabel.setText("SmartEQ Free ready - 8 bands. No analyzer in the Free version.", juce::dontSendNotification);
+    statusLabel.setText("SmartEQ Free ready - 8 bands. Drag curve nodes to edit. Analyzer + song-map are Full only.", juce::dontSendNotification);
 #else
     statusLabel.setText("Press ANALYZE while the track is playing to detect and auto-correct.", juce::dontSendNotification);
 #endif
@@ -343,9 +343,9 @@ SmartEQAudioProcessorEditor::SmartEQAudioProcessorEditor(SmartEQAudioProcessor& 
     isInitializing = false;
     setResizable(true, true);
 #ifdef SMARTEQ_FREE_VERSION
-    // Free: no spectrum - compact window, band dock fills the space
-    setResizeLimits(1100, 440, 1920, 1200);
-    setSize(1280, 600);
+    // Free: graphic curve on top, band dock below (no spectrum/analyzer)
+    setResizeLimits(1100, 560, 1920, 1200);
+    setSize(1280, 700);
 #else
     setResizeLimits(1100, 700, 1920, 1200);
     setSize(1280, 860);
@@ -449,10 +449,7 @@ void SmartEQAudioProcessorEditor::paint(juce::Graphics& g)
 void SmartEQAudioProcessorEditor::resized()
 {
     // Guard contro chiamate premature (Bitwig discovery crea editor temporaneo)
-    // (Free has no spectrum component at all)
-#ifndef SMARTEQ_FREE_VERSION
     if (!spectrum) return;
-#endif
     if (bandStrips.size() < EQProcessor::NumBands) return;
     if (getWidth() < 50 || getHeight() < 50) return;
     auto b = getLocalBounds();
@@ -511,15 +508,19 @@ void SmartEQAudioProcessorEditor::resized()
 #endif
 
     b.removeFromTop(2);
-    // Bottom dock: band strips (+ demo bar in Full). Everything else goes
-    // to the spectrum analyzer (Full); in Free the dock fills the space (no void).
+    // Bottom dock: band strips (+ demo bar in Full). The graphic curve fills
+    // the middle in both editions (Free: curve only, no live spectrum).
     constexpr int bandDockH = 250;
+    constexpr int freeDockH = 330;
     constexpr int statusH = 16 + 22;
 #ifdef SMARTEQ_FREE_VERSION
+    auto bottom = b.removeFromBottom(freeDockH);
     auto statusArea = b.removeFromBottom(statusH);
     analyzerStatus.setBounds(statusArea.removeFromTop(16));
     statusLabel.setBounds(statusArea);
-    auto bottom = b;
+    auto spectrumArea = b;
+    spectrumArea.reduce(6, 2);
+    spectrum->setBounds(spectrumArea);
 #else
     constexpr int demoH = 32;
     auto demoBar = b.removeFromBottom(demoH);

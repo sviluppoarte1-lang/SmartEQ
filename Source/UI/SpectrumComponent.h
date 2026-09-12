@@ -19,6 +19,8 @@ public:
 
     void setShowIntelligentOverlay(bool s) { showIntelligent = s; repaint(); }
     void setAnalysisResult(const IntelligentAnalyzer::AnalysisResult* r) { analysisResult = r; repaint(); }
+    // Free edition: curve + nodes only, no live spectrum (no analyzer there)
+    void setShowSpectrum(bool s) { showSpectrum = s; repaint(); }
 
 private:
     void timerCallback() override { repaint(); }
@@ -37,6 +39,7 @@ private:
     double dragStartFreq = 0;
 
     bool showIntelligent = false;
+    bool showSpectrum = true;
     const IntelligentAnalyzer::AnalysisResult* analysisResult = nullptr;
 
     juce::Point<float> freqGainToPixel(double freq, float gainDB, juce::Rectangle<float> bounds) const;

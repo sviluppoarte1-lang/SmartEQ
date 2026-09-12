@@ -27,28 +27,31 @@ void SpectrumComponent::paint(juce::Graphics& g)
     // Grid
     drawGrid(g, bounds);
 
-    // --- Spectrum fill ---
-    juce::Path specPath, specFill;
-    bool first=true;
-    for (int i=0;i<spectrumPoints;++i)
+    // --- Spectrum fill (hidden in Free: curve only) ---
+    if (showSpectrum)
     {
-        float db = juce::jlimit(-60.f, 12.f, spectrumDB[i]);
-        auto pt = freqGainToPixel(freqs[i], db, bounds);
-        // leggera offset per visual: mappa -60..12 -> -18..18
-        pt.y = juce::jmap(db, -60.f, 12.f, bounds.getBottom() - 20, bounds.getY() + 20);
-        if (first) { specPath.startNewSubPath(pt); specFill.startNewSubPath(pt.x, bounds.getBottom()); specFill.lineTo(pt); first=false; }
-        else { specPath.lineTo(pt); specFill.lineTo(pt); }
-    }
-    specFill.lineTo(freqGainToPixel(freqs[spectrumPoints-1], -60, bounds).x, bounds.getBottom());
-    specFill.closeSubPath();
+        juce::Path specPath, specFill;
+        bool first=true;
+        for (int i=0;i<spectrumPoints;++i)
+        {
+            float db = juce::jlimit(-60.f, 12.f, spectrumDB[i]);
+            auto pt = freqGainToPixel(freqs[i], db, bounds);
+            // leggera offset per visual: mappa -60..12 -> -18..18
+            pt.y = juce::jmap(db, -60.f, 12.f, bounds.getBottom() - 20, bounds.getY() + 20);
+            if (first) { specPath.startNewSubPath(pt); specFill.startNewSubPath(pt.x, bounds.getBottom()); specFill.lineTo(pt); first=false; }
+            else { specPath.lineTo(pt); specFill.lineTo(pt); }
+        }
+        specFill.lineTo(freqGainToPixel(freqs[spectrumPoints-1], -60, bounds).x, bounds.getBottom());
+        specFill.closeSubPath();
 
-    // gradient fill spectrum
-    juce::ColourGradient grad(juce::Colour(0x4000ffcc), bounds.getCentreX(), bounds.getY(),
-                              juce::Colour(0x0500ffcc), bounds.getCentreX(), bounds.getBottom(), false);
-    g.setGradientFill(grad);
-    g.fillPath(specFill);
-    g.setColour(juce::Colour(0xff00ffcc).withAlpha(0.9f));
-    g.strokePath(specPath, juce::PathStrokeType(1.5f));
+        // gradient fill spectrum
+        juce::ColourGradient grad(juce::Colour(0x4000ffcc), bounds.getCentreX(), bounds.getY(),
+                                  juce::Colour(0x0500ffcc), bounds.getCentreX(), bounds.getBottom(), false);
+        g.setGradientFill(grad);
+        g.fillPath(specFill);
+        g.setColour(juce::Colour(0xff00ffcc).withAlpha(0.9f));
+        g.strokePath(specPath, juce::PathStrokeType(1.5f));
+    }
 
     // --- Intelligent overlay (aree problematiche) ---
     if (showIntelligent && analysisResult)
@@ -70,7 +73,7 @@ void SpectrumComponent::paint(juce::Graphics& g)
 
     // --- EQ Curve ---
     juce::Path eqPath;
-    first=true;
+    bool first = true;
     for (int i=0;i<spectrumPoints;++i)
     {
         float db = juce::jlimit(-18.f, 18.f, eqCurveDB[i]);
