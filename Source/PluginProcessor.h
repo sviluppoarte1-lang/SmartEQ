@@ -76,10 +76,16 @@ public:
     juce::String getLastPresetName() const;
     juce::String getLastPresetCategory() const;
 
-    // Public build: no licensing - full version, always unlocked.
-    bool isLicensed() const { return true; }
+    // Public build: no license keys here. Free edition fully working;
+    // Full edition runs a 45-minute demo per session (timer only, no secrets).
+#ifdef SMARTEQ_FREE_VERSION
     bool isDemoExpired() const { return false; }
     double getDemoSecondsRemaining() const { return -1.0; }
+#else
+    static constexpr double kDemoLimitSeconds = 45.0 * 60.0;
+    bool isDemoExpired() const;
+    double getDemoSecondsRemaining() const;
+#endif
 
 private:
     EQProcessor eq;
@@ -94,7 +100,9 @@ private:
     void updateSongMap(juce::AudioBuffer<float>& buffer, double sampleRate);
 #endif
 
-    // (no licensed/demoSecondsUsed members: public build is always unlocked)
+#ifndef SMARTEQ_FREE_VERSION
+    std::atomic<double> demoSecondsUsed { 0.0 }; // demo timer only, no secrets
+#endif
 
     // Smoothing bypass
     juce::SmoothedValue<float, juce::ValueSmoothingTypes::Linear> dryWet;

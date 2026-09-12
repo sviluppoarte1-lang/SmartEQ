@@ -1,6 +1,6 @@
 @echo off
 echo === SmartEQ Installer Windows (Fear Escape) ===
-echo Full (16 bands + analyzer + song-map) + Free (8 bands) - both fully unlocked
+echo Full (16 bands + analyzer + song-map, 45-min demo) + Free (8 bands, fully working)
 
 set VST3_PRO=build\SmartEQ_artefacts\Release\VST3\SmartEQ.vst3
 set VST3_FREE=build\SmartEQFree_artefacts\Release\VST3\SmartEQFree.vst3
@@ -26,6 +26,8 @@ if exist "%VST3_FREE%" (
 )
 
 echo.
-echo Full version: 16 bands + analyzer + song-map, fully unlocked.
+echo Full version: 16 bands + analyzer + song-map (45-minute demo per session).
+echo Free version: 8 bands, fully working.
+echo Buy the Full version: https://www.paypal.com/paypalme/fearescape/19.99
 echo Riavvia la DAW e rescansiona i plugin VST3.
 pause

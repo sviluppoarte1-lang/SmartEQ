@@ -123,7 +123,16 @@ void SmartEQAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce:
     double sr = getSampleRate();
     if (sr < 8000) sr = 48000;
 
-    // Public build: always unlocked, no demo clock.
+#ifndef SMARTEQ_FREE_VERSION
+    // Full-edition demo: 45 minutes of audio per session, then mute.
+    // Timer only - no license keys in the public build.
+    demoSecondsUsed.store(demoSecondsUsed.load() + (double) numSamples / sr);
+    if (demoSecondsUsed.load() >= kDemoLimitSeconds)
+    {
+        buffer.clear();
+        return;
+    }
+#endif
 
     // Aggiorna parametri live con null-check (incl. tipo filtro)
     for (int i=0;i<EQProcessor::NumBands;++i)
@@ -356,6 +365,18 @@ void SmartEQAudioProcessor::getStateInformation(juce::MemoryBlock& destData)
     std::unique_ptr<juce::XmlElement> xml(state.createXml());
     copyXmlToBinary(*xml, destData);
 }
+
+#ifndef SMARTEQ_FREE_VERSION
+bool SmartEQAudioProcessor::isDemoExpired() const
+{
+    return demoSecondsUsed.load() >= kDemoLimitSeconds;
+}
+
+double SmartEQAudioProcessor::getDemoSecondsRemaining() const
+{
+    return juce::jmax(0.0, kDemoLimitSeconds - demoSecondsUsed.load());
+}
+#endif
 
 void SmartEQAudioProcessor::setStateInformation(const void* data, int sizeInBytes)
 {

@@ -14,10 +14,13 @@ Compatible **Windows &amp; Linux** — VST3 + Standalone — Mastering &amp; Edi
 | Filter types per band | All 10 professional types | All 10 professional types |
 | Spectrum analyzer | No | Yes (FFT 2048, full-panel) |
 | ANALYZE &amp; FIX engine | No | Yes |
-| License | Free, no key needed | Free, no key needed |
-| Demo without key | N/A (fully working) | N/A (fully working) |
+| License | Free | 19.99 EUR |
+| Demo | N/A (fully working) | 45 minutes per session, then audio mutes |
 
-Both editions in this repository are fully unlocked — no keys, no demo limits.
+**Buy the Full version:** https://www.paypal.com/paypalme/fearescape/19.99 —
+after payment you receive the fully unlocked Full build. This repository
+contains no license keys: the Free edition is fully working, the Full
+edition here runs the 45-minute demo.
 
 ---
 
@@ -124,8 +127,8 @@ Source/
  ├─ UI/
  │   ├─ SpectrumComponent     Full-panel paint, grid, drag (Full only at runtime)
  │   └─ ModernLookAndFeel     Glow faders, arc knobs, pill switches
- ├─ PluginProcessor           APVTS bands×gain/freq/Q/enabled/type + song params
- └─ PluginEditor              Analyzer + song learn/follow controls (Full)
+ ├─ PluginProcessor           APVTS bands×gain/freq/Q/enabled/type + song params, demo clock (Full)
+ └─ PluginEditor              Analyzer + song learn/follow controls + demo bar (Full)
 CMakeLists.txt                JUCE 7.0.12, two targets: SmartEQ + SmartEQFree
 ```
 

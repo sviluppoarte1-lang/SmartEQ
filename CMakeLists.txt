@@ -108,6 +108,6 @@ add_smarteq_variant(SmartEQ SmartEQ "SmartEQ Intelligent Equalizer" SmEq
 add_smarteq_variant(SmartEQFree SmartEQFree "SmartEQ Free" SmFr
     "com.fearescape.smarteqfree" "Fx|EQ" ON)
 
-# (No keygen in the public build: full version, always unlocked.)
+# (No keygen in the public build: keys stay private. Full runs a 45-min demo.)
 
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR}/Source PREFIX Source FILES ${SMARTEQ_SOURCES})

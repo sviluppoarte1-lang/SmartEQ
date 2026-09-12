@@ -41,7 +41,13 @@ private:
     juce::TextButton songFollowButton { "FOLLOW" };
     juce::TextButton songClearButton { "CLEAR" };
 
-    // (no licensing in the public build: full version, always unlocked)
+    // Demo bar (Full only, public build): countdown + buy link, no key field.
+    // Full-edition purchase happens outside the plugin - no secrets here.
+    juce::Label demoLabel;
+    juce::TextButton buyButton { "BUY FULL VERSION - 19.99 EUR" };
+
+    struct ExpiredOverlay;
+    std::unique_ptr<ExpiredOverlay> expiredOverlay;
 #endif
 
     // 16 bands with full professional filter-type selector
