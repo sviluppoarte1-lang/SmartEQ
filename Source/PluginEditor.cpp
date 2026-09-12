@@ -35,8 +35,9 @@ void SmartEQAudioProcessorEditor::BandStrip::resized()
     typeL.setBounds(b.removeFromTop(12));
     type.setBounds(b.removeFromTop(22));
     auto top = b;
-    gain.setBounds(top.removeFromLeft(36));
-    gainL.setBounds(gain.getBounds().withY(gain.getBottom()).withHeight(12));
+    auto gainCol = top.removeFromLeft(36);
+    gainL.setBounds(gainCol.removeFromBottom(12));
+    gain.setBounds(gainCol);
     auto right = top;
     freq.setBounds(right.removeFromTop(52));
     freqL.setBounds(right.removeFromTop(12));
@@ -341,8 +342,14 @@ SmartEQAudioProcessorEditor::SmartEQAudioProcessorEditor(SmartEQAudioProcessor& 
 
     isInitializing = false;
     setResizable(true, true);
+#ifdef SMARTEQ_FREE_VERSION
+    // Free: no spectrum - compact window, band dock fills the space
+    setResizeLimits(1100, 440, 1920, 1200);
+    setSize(1280, 600);
+#else
     setResizeLimits(1100, 700, 1920, 1200);
     setSize(1280, 860);
+#endif
     startTimerHz(12);
 }
 
@@ -504,16 +511,15 @@ void SmartEQAudioProcessorEditor::resized()
 #endif
 
     b.removeFromTop(2);
-    // Bottom dock: band strips (+ license bar in Full). Everything else goes
-    // to the spectrum analyzer (Full) or stays empty (Free).
+    // Bottom dock: band strips (+ demo bar in Full). Everything else goes
+    // to the spectrum analyzer (Full); in Free the dock fills the space (no void).
     constexpr int bandDockH = 250;
     constexpr int statusH = 16 + 22;
 #ifdef SMARTEQ_FREE_VERSION
-    auto bottom = b.removeFromBottom(bandDockH);
     auto statusArea = b.removeFromBottom(statusH);
     analyzerStatus.setBounds(statusArea.removeFromTop(16));
     statusLabel.setBounds(statusArea);
-    // Free: no spectrum - leave the freed area empty (dark background)
+    auto bottom = b;
 #else
     constexpr int demoH = 32;
     auto demoBar = b.removeFromBottom(demoH);
