@@ -1,0 +1,11 @@
+[Desktop Entry]
+Type=Application
+Name=SmartEQ Free
+GenericName=Graphic Equalizer
+Comment=8-band graphic equalizer with 10 professional filter types per band by Fear Escape (free)
+Exec=SmartEQFree
+Icon=smarteqfree
+Categories=AudioVideo;Audio;Music;
+Terminal=false
+StartupNotify=false
+Keywords=EQ;equalizer;VST;audiomixing;mastering;

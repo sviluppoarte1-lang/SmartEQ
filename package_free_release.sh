@@ -11,7 +11,7 @@ DISPLAY="SmartEQ Free"
 DESC="8-band graphic equalizer with 10 professional filter types per band"
 VST3_SRC="build/SmartEQFree_artefacts/Release/VST3/SmartEQFree.vst3"
 STANDALONE_SRC="build/SmartEQFree_artefacts/Release/Standalone/SmartEQFree"
-LOGO="../logo.jpg"
+LOGO="smarteqfree.png"
 DIST="dist"
 PKGDIR="$DIST/deb_${NAME,,}"
 

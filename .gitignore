@@ -6,6 +6,9 @@ cmake-build-*/
 .vscode/
 .idea/
 DerivedData/
-dist/
+dist/AppDir_*/
+dist/deb_*/
+dist/*.deb
+dist/Build*
 __pycache__/
 *.pyc
