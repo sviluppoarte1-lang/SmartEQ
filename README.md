@@ -1,3 +1,6 @@
+
+<img width="1289" height="736" alt="smarteq" src="https://github.com/user-attachments/assets/1fb20568-b95b-4bd7-8b4f-607d0e9cbc34" />
+
 # SmartEQ by Fear Escape — Intelligent Equalizer VST3
 
 **Two editions: SmartEQ Free (8 bands) and SmartEQ Full (16 bands + professional spectrum analyzer + auto-fix)**
