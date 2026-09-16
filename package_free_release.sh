@@ -1,21 +1,21 @@
 #!/bin/bash
-# Fear Escape - SmartEQ Free release packaging (.deb + AppImage)
-# Run from the SmartEQ-VST3 directory after a Release build.
+# Fear Escape - SpectraCurve Free release packaging (.deb + AppImage)
+# Run from the SpectraCurve-VST3 directory after a Release build.
 set -e
 cd "$(dirname "$0")"
 
 VERSION="1.0.0"
 ARCH="amd64"
-NAME="SmartEQFree"
-DISPLAY="SmartEQ Free"
+NAME="SpectraCurveFree"
+DISPLAY="SpectraCurve Free"
 DESC="8-band graphic equalizer with 10 professional filter types per band"
-VST3_SRC="build/SmartEQFree_artefacts/Release/VST3/SmartEQFree.vst3"
-STANDALONE_SRC="build/SmartEQFree_artefacts/Release/Standalone/SmartEQFree"
-LOGO="smarteqfree.png"
+VST3_SRC="build/SpectraCurveFree_artefacts/Release/VST3/SpectraCurveFree.vst3"
+STANDALONE_SRC="build/SpectraCurveFree_artefacts/Release/Standalone/SpectraCurveFree"
+LOGO="spectracurvefree.png"
 DIST="dist"
 PKGDIR="$DIST/deb_${NAME,,}"
 
-for f in "$VST3_SRC/Contents/x86_64-linux/SmartEQFree.so" "$STANDALONE_SRC" "$LOGO"; do
+for f in "$VST3_SRC/Contents/x86_64-linux/SpectraCurveFree.so" "$STANDALONE_SRC" "$LOGO"; do
   [ -e "$f" ] || { echo "MISSING: $f (build Release first)"; exit 1; }
 done
 command -v dpkg-deb >/dev/null || { echo "dpkg-deb missing"; exit 1; }
@@ -102,11 +102,11 @@ HERE="\$(dirname "\$(readlink -f "\$0")")"
 case "\$1" in
   --install-vst3)
     mkdir -p "\$HOME/.vst3"
-    cp -r "\$HERE/usr/lib/vst3/SmartEQFree.vst3" "\$HOME/.vst3/"
-    echo "SmartEQ Free VST3 installed to \$HOME/.vst3/ - rescan plugins in your DAW."
+    cp -r "\$HERE/usr/lib/vst3/SpectraCurveFree.vst3" "\$HOME/.vst3/"
+    echo "SpectraCurve Free VST3 installed to \$HOME/.vst3/ - rescan plugins in your DAW."
     ;;
   --help|-h)
-    echo "SmartEQ Free (portable)"
+    echo "SpectraCurve Free (portable)"
     echo "  Run with no arguments : launch the standalone equalizer"
     echo "  --install-vst3        : install the bundled VST3 into ~/.vst3"
     ;;

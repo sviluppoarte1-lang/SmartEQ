@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.22)
-project(SmartEQ VERSION 1.0.0)
+project(SpectraCurve VERSION 1.0.0)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -27,7 +27,7 @@ set(SMARTEQ_SOURCES
 )
 
 # Adds one SmartEQ variant.
-# IS_FREE=ON  -> SmartEQ Free: 8 bands, no analyzer.
+# IS_FREE=ON  -> SpectraCurve Free: 8 bands, no analyzer.
 # IS_FREE=OFF -> SmartEQ Full: 16 bands + analyzer + song-map.
 # Public build: both variants are fully unlocked, no licensing.
 function(add_smarteq_variant TARGET PRODUCT DISPLAY PLUGINCODE BUNDLE CATS IS_FREE)
@@ -101,12 +101,12 @@ function(smarteq_link_linux TARGET NEED_AUDIO_DEVICES)
 endfunction()
 
 # Full (paid) version
-add_smarteq_variant(SmartEQ SmartEQ "SmartEQ Intelligent Equalizer" SmEq
-    "com.fearescape.smarteq" "Fx|EQ|Mastering" OFF)
+add_smarteq_variant(SmartEQ SmartEQ "SpectraCurve EQ Intelligent Equalizer" SmEq
+    "com.fearescape.spectracurve" "Fx|EQ|Mastering" OFF)
 
 # Free version: 8 bands, no analyzer
-add_smarteq_variant(SmartEQFree SmartEQFree "SmartEQ Free" SmFr
-    "com.fearescape.smarteqfree" "Fx|EQ" ON)
+add_smarteq_variant(SmartEQFree SmartEQFree "SpectraCurve Free" SmFr
+    "com.fearescape.spectracurvefree" "Fx|EQ" ON)
 
 # (No keygen in the public build: keys stay private. Full runs a 45-min demo.)
 

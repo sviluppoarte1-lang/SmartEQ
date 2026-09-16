@@ -23,9 +23,9 @@ public:
     bool hasEditor() const override { return true; }
 
 #ifdef SMARTEQ_FREE_VERSION
-    const juce::String getName() const override { return "SmartEQ Free"; }
+    const juce::String getName() const override { return "SpectraCurve Free"; }
 #else
-    const juce::String getName() const override { return "SmartEQ"; }
+    const juce::String getName() const override { return "SpectraCurve EQ"; }
 #endif
     bool acceptsMidi() const override { return false; }
     bool producesMidi() const override { return false; }

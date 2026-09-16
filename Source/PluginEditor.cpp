@@ -113,9 +113,9 @@ SmartEQAudioProcessorEditor::SmartEQAudioProcessorEditor(SmartEQAudioProcessor& 
 
     // Title (ASCII only: "•" renders as mojibake on systems without the glyph)
 #ifdef SMARTEQ_FREE_VERSION
-    titleLabel.setText("SmartEQ Free  |  8 Band Equalizer", juce::dontSendNotification);
+    titleLabel.setText("SpectraCurve Free  |  8 Band Equalizer", juce::dontSendNotification);
 #else
-    titleLabel.setText("SmartEQ  |  16 Band Intelligent Equalizer  |  Mastering & Editing", juce::dontSendNotification);
+    titleLabel.setText("SpectraCurve EQ  |  16 Band Intelligent Equalizer  |  Mastering & Editing", juce::dontSendNotification);
 #endif
     titleLabel.setFont(juce::Font(18.f).withStyle(juce::Font::bold));
     titleLabel.setColour(juce::Label::textColourId, juce::Colours::white);
@@ -158,7 +158,7 @@ SmartEQAudioProcessorEditor::SmartEQAudioProcessorEditor(SmartEQAudioProcessor& 
     songLearnButton.setClickingTogglesState(true);
     songLearnButton.setColour(juce::TextButton::buttonColourId, juce::Colour(0xff2a2a3a));
     songLearnButton.setColour(juce::TextButton::buttonOnColourId, juce::Colour(0xffb71c1c));
-    songLearnButton.setTooltip("SONG LEARN: play the whole song - SmartEQ memorizza le variazioni timbriche battuta per battuta");
+    songLearnButton.setTooltip("SONG LEARN: play the whole song - SpectraCurve memorizza le variazioni timbriche battuta per battuta");
     addAndMakeVisible(songLearnButton);
     songFollowButton.setClickingTogglesState(true);
     songFollowButton.setColour(juce::TextButton::buttonColourId, juce::Colour(0xff2a2a3a));
@@ -236,7 +236,7 @@ SmartEQAudioProcessorEditor::SmartEQAudioProcessorEditor(SmartEQAudioProcessor& 
     strengthSlider.setColour(juce::Slider::thumbColourId, juce::Colour(0xff00ff88));
 
 #ifdef SMARTEQ_FREE_VERSION
-    statusLabel.setText("SmartEQ Free ready - 8 bands. Drag curve nodes to edit. Analyzer + song-map are Full only.", juce::dontSendNotification);
+    statusLabel.setText("SpectraCurve Free ready - 8 bands. Drag curve nodes to edit. Analyzer + song-map are Full only.", juce::dontSendNotification);
 #else
     statusLabel.setText("Press ANALYZE while the track is playing to detect and auto-correct.", juce::dontSendNotification);
 #endif
