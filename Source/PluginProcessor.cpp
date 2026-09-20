@@ -30,6 +30,11 @@ juce::AudioProcessorValueTreeState::ParameterLayout SmartEQAudioProcessor::creat
     layout.add(std::make_unique<juce::AudioParameterBool>("songFollow", "Song Follow", false));
     layout.add(std::make_unique<juce::AudioParameterFloat>("songGlide", "Song Glide",
         juce::NormalisableRange<float>(0.f, 2000.f, 1.f, 0.4f), 400.f));
+    // Room calibration - mic profile selection
+    {
+        auto micNames = MicProfile::getProfileNames();
+        layout.add(std::make_unique<juce::AudioParameterChoice>("micProfile", "Mic Profile", micNames, 0));
+    }
 #endif
 
     // All bands - all professional filter types per band (8 Free / 16 Full)
@@ -69,6 +74,7 @@ void SmartEQAudioProcessor::prepareToPlay(double sampleRate, int samplesPerBlock
 #ifndef SMARTEQ_FREE_VERSION
     songAnalyzer.prepare(sampleRate);
     for (int i = 0; i < SongAnalyzer::MaxSongBands; ++i) songCurrentOffsets[i] = 0.0f;
+    roomCalibrator.prepare(sampleRate, samplesPerBlock);
 #endif
     // Sincronizza parametri -> DSP con guard
     for (int i=0;i<EQProcessor::NumBands;++i)
@@ -131,6 +137,18 @@ void SmartEQAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce:
     {
         buffer.clear();
         return;
+    }
+#endif
+
+    // --- Room calibrator SE-9 style: se in Playing genera pink e cattura ---
+#ifndef SMARTEQ_FREE_VERSION
+    {
+        auto rcState = roomCalibrator.getState();
+        if (rcState == RoomCalibrator::State::Playing || rcState == RoomCalibrator::State::Analyzing)
+        {
+            roomCalibrator.processBlock(buffer, true);
+            return;
+        }
     }
 #endif
 
@@ -217,6 +235,30 @@ void SmartEQAudioProcessor::processBlock(juce::AudioBuffer<double>& buffer, juce
 }
 
 #ifndef SMARTEQ_FREE_VERSION
+void SmartEQAudioProcessor::startRoomCalibration()
+{
+    int micIdx = 0;
+    if (auto* p = apvts.getRawParameterValue("micProfile")) micIdx = (int) p->load();
+    roomCalibrator.setMicProfile(micIdx);
+    roomCalibrator.startCalibration(micIdx);
+}
+
+void SmartEQAudioProcessor::abortRoomCalibration()
+{
+    roomCalibrator.abort();
+}
+
+void SmartEQAudioProcessor::applyRoomCalibration(float strength)
+{
+    roomCalibrator.applyToEQ(eq, strength);
+    for (int i = 0; i < EQProcessor::NumBands; ++i)
+    {
+        float newGain = (float) eq.getBand(i).gainDB;
+        if (auto* p = apvts.getParameter("band" + juce::String(i) + "_gain"))
+            p->setValueNotifyingHost(p->convertTo0to1(newGain));
+    }
+}
+
 void SmartEQAudioProcessor::clearSongMap()
 {
     songAnalyzer.reset();

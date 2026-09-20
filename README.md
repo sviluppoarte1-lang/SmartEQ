@@ -17,6 +17,7 @@ Compatible **Windows &amp; Linux** — VST3 + Standalone — Mastering &amp; Edi
 | Filter types per band | All 10 professional types | All 10 professional types |
 | Spectrum analyzer | No | Yes (FFT 2048, full-panel) |
 | ANALYZE &amp; FIX engine | No | Yes |
+| **Room Calibration (Sansui SE-9 style)** | No | **Yes** — mic + pink noise, auto-EQ |
 | License | Free | 19.99 EUR |
 | Demo | N/A (fully working) | 45 minutes per session, then audio mutes |
 
@@ -63,6 +64,16 @@ subharmonic) are musical partials, not defects, and are only flagged
 above +14 dB (+18 dB always flags). Solo inharmonic peaks — room modes,
 mic ringing, harshness — keep the normal +8 dB threshold, so the
 auto-fix cuts problems, never music.
+
+### Room Calibration — Sansui SE-9 inspired (Full only, mastering & mixing)
+Inspired by the iconic **Sansui SE-9** (1980s) motorized graphic EQ: connect a measurement mic, press **ROOM CAL**, and the hardware automatically moves the sliders. SpectraCurve does it digitally and optimized:
+
+- **24 mic profiles** selectable (`ECM8000`, `UMIK-1/2`, `U87`, `SM58/57`, `C414`, smartphone, laptop…) — each with its own compensation curve so the measurement is linear
+- **Internal pink noise generator** (Paul Kellet filtered, 6 seconds) played through your monitors
+- **Automated capture & analysis**: the mic records the room response, the DSP compares it to ideal pink (-3 dB/oct), subtracts mic compensation, smooths and limits the correction to **±6 dB** per band
+- **Motorized fader animation**: on **APPLY**, the 16 gains glide with an ease-out cubic (≈0.6 s) exactly like the SE-9's motors — perfect for before mastering or for quickly linearizing a mixing room
+
+Use in **Standalone** with your mic → monitors loop, or in the DAW by routing a mic track into the plugin. Silence detection warns if the mic is not connected or gain is too low.
 
 ### 38 professional presets (English)
 Vocals (Transparent Lead, Female Air, Warm Male, Rap/Trap, Choir/Backing,
@@ -117,23 +128,27 @@ cmake --build build --config Release
 
 ## Technical layout
 
-```
-Source/
- ├─ DSP/
- │   ├─ EQBand.h              Biquad RBJ (10 types) + EQBand (1-2 stages)
- │   ├─ EQProcessor.{h,cpp}   8/16-band cascade (SMARTEQ_FREE_VERSION), response curve
- │   ├─ IntelligentAnalyzer   FFT 4096 + 6 detectors (Full only at runtime)
- │   ├─ SongAnalyzer          Full-song bar-by-bar EQ map: learn + follow (Full)
- │   └─ SpectrumAnalyzer      FFT 2048 real-time UI (Full only at runtime)
- ├─ Presets/
- │   └─ PresetManager         38 English presets
- ├─ UI/
- │   ├─ SpectrumComponent     Full-panel paint, grid, drag (Full only at runtime)
- │   └─ ModernLookAndFeel     Glow faders, arc knobs, pill switches
- ├─ PluginProcessor           APVTS bands×gain/freq/Q/enabled/type + song params, demo clock (Full)
- └─ PluginEditor              Analyzer + song learn/follow controls + demo bar (Full)
-CMakeLists.txt                JUCE 7.0.12, two targets: SmartEQ + SmartEQFree
-```
+``` 
+ Source/
+  ├─ DSP/
+  │   ├─ EQBand.h              Biquad RBJ (10 types) + EQBand (1-2 stages)
+  │   ├─ EQProcessor.{h,cpp}   8/16-band cascade (SMARTEQ_FREE_VERSION), response curve
+  │   ├─ IntelligentAnalyzer   FFT 4096 + 6 detectors (Full only at runtime)
+  │   ├─ SongAnalyzer          Full-song bar-by-bar EQ map: learn + follow (Full)
+  │   ├─ SpectrumAnalyzer      FFT 2048 real-time UI (Full only at runtime)
+  │   ├─ MicProfile.h          24 mic compensation database (Full)
+  │   ├─ PinkNoiseGenerator.h  Paul Kellet pink filter (Full)
+  │   └─ RoomCalibrator        SE-9 room measurement + correction (Full)
+  ├─ Presets/
+  │   └─ PresetManager         38 English presets
+  ├─ UI/
+  │   ├─ SpectrumComponent     Full-panel paint, grid, drag (Full only at runtime)
+  │   ├─ ModernLookAndFeel     Glow faders, arc knobs, pill switches
+  │   └─ RoomCalComponent      Mic selector + ROOM CAL + motorized animation (Full)
+  ├─ PluginProcessor           APVTS bands×gain/freq/Q/enabled/type + song/room params, demo clock (Full)
+  └─ PluginEditor              Analyzer + song + room-cal controls + demo bar (Full)
+ CMakeLists.txt                JUCE 7.0.12, two targets: SmartEQ + SmartEQFree
+ ```
 
 ---
 

@@ -3,6 +3,9 @@
 #include "PluginProcessor.h"
 #include "UI/SpectrumComponent.h"
 #include "UI/ModernLookAndFeel.h"
+#ifndef SMARTEQ_FREE_VERSION
+#include "UI/RoomCalComponent.h"
+#endif
 
 class SmartEQAudioProcessorEditor : public juce::AudioProcessorEditor, public juce::Timer
 {
@@ -48,6 +51,9 @@ private:
 
     struct ExpiredOverlay;
     std::unique_ptr<ExpiredOverlay> expiredOverlay;
+
+    // Room calibration SE-9 style (Full only)
+    std::unique_ptr<RoomCalComponent> roomCalComponent;
 #endif
 
     // 16 bands with full professional filter-type selector

@@ -280,6 +280,12 @@ SmartEQAudioProcessorEditor::SmartEQAudioProcessorEditor(SmartEQAudioProcessor& 
     addChildComponent(*expiredOverlay);
 #endif
 
+ #ifndef SMARTEQ_FREE_VERSION
+    // Room calibration SE-9 style panel (Full only)
+    roomCalComponent = std::make_unique<RoomCalComponent>(processor);
+    addAndMakeVisible(*roomCalComponent);
+#endif
+
     // Band strips (taller to fit Type selector) + modern styling
     bandContainer.setSize(1280, 250);
     for(int i=0;i<EQProcessor::NumBands;++i)
@@ -347,8 +353,8 @@ SmartEQAudioProcessorEditor::SmartEQAudioProcessorEditor(SmartEQAudioProcessor& 
     setResizeLimits(1100, 560, 1920, 1200);
     setSize(1280, 700);
 #else
-    setResizeLimits(1100, 700, 1920, 1200);
-    setSize(1280, 860);
+    setResizeLimits(1100, 760, 1920, 1280);
+    setSize(1280, 920);
 #endif
     startTimerHz(12);
 }
@@ -554,6 +560,16 @@ void SmartEQAudioProcessorEditor::resized()
 void SmartEQAudioProcessorEditor::timerCallback()
 {
 #ifndef SMARTEQ_FREE_VERSION
+    // Room cal SE-9 panel refresh + motorized fader animation
+    if (roomCalComponent)
+    {
+        roomCalComponent->refresh();
+        if (roomCalComponent->isAnimating())
+        {
+            roomCalComponent->updateAnimation();
+            if (spectrum) spectrum->repaint();
+        }
+    }
     float prog = processor.getIntelligentAnalyzer().getProgress();
     juce::String songTxt = processor.getSongAnalyzer().getStatusText();
     if (prog < 1.0f && prog > 0.05f)

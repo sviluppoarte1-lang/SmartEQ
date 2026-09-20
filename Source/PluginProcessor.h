@@ -5,6 +5,9 @@
 #include "DSP/SongAnalyzer.h"
 #include "DSP/SpectrumAnalyzer.h"
 #include "Presets/PresetManager.h"
+#ifndef SMARTEQ_FREE_VERSION
+#include "DSP/RoomCalibrator.h"
+#endif
 // Public build: no licensing - full version, always unlocked.
 
 class SmartEQAudioProcessor : public juce::AudioProcessor
@@ -69,6 +72,12 @@ public:
     SongAnalyzer& getSongAnalyzer() { return songAnalyzer; }
     void clearSongMap();
     bool isSongFollowing() const;
+
+    // Room calibration Sansui SE-9 style (Full only)
+    RoomCalibrator& getRoomCalibrator() { return roomCalibrator; }
+    void startRoomCalibration();
+    void abortRoomCalibration();
+    void applyRoomCalibration(float strength = 1.0f);
 #endif
 
     // Preset persistence (stored in APVTS state)
@@ -98,6 +107,7 @@ private:
     float songCurrentOffsets[SongAnalyzer::MaxSongBands] = { 0 };
     bool songWasPlaying = false;
     void updateSongMap(juce::AudioBuffer<float>& buffer, double sampleRate);
+    RoomCalibrator roomCalibrator;
 #endif
 
 #ifndef SMARTEQ_FREE_VERSION

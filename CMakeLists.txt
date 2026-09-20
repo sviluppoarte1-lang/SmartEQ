@@ -21,9 +21,11 @@ set(SMARTEQ_SOURCES
     Source/DSP/IntelligentAnalyzer.cpp
     Source/DSP/SongAnalyzer.cpp
     Source/DSP/SpectrumAnalyzer.cpp
+    Source/DSP/RoomCalibrator.cpp
     Source/Presets/PresetManager.cpp
     Source/UI/SpectrumComponent.cpp
     Source/UI/ModernLookAndFeel.cpp
+    Source/UI/RoomCalComponent.cpp
 )
 
 # Adds one SmartEQ variant.
