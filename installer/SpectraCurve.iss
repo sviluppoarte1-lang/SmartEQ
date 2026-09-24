@@ -28,7 +28,7 @@ Name: "english"; MessagesFile: "compiler:Default.isl"
 
 [Files]
 ; VST3 bundles -> standard system VST3 folder
-Source: "..\build\SmartEQ_artefacts\Release\VST3\SmartEQ.vst3\*"; DestDir: "{commoncf64}\VST3\SmartEQ.vst3"; Flags: recursesubdirs createallsubdirs ignoreversion; Check: FileExists(ExpandConstant('{commoncf64}\VST3')) or True
+Source: "..\build\SmartEQ_artefacts\Release\VST3\SmartEQ.vst3\*"; DestDir: "{commoncf64}\VST3\SmartEQ.vst3"; Flags: recursesubdirs createallsubdirs ignoreversion
 Source: "..\build\SmartEQFree_artefacts\Release\VST3\SmartEQFree.vst3\*"; DestDir: "{commoncf64}\VST3\SmartEQFree.vst3"; Flags: recursesubdirs createallsubdirs ignoreversion
 ; Standalone apps -> program folder
 Source: "..\build\SmartEQ_artefacts\Release\Standalone\SmartEQ.exe"; DestDir: "{app}"; Flags: ignoreversion
